@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
+import 'models.dart';
 
 final List<String> healthtype = [
   "가슴",
@@ -15,42 +16,6 @@ final List<String> healthtype = [
   "하체",
   "유산소",
 ];
-
-class Exercise {
-  int? id;
-  String? name;
-  String? enname;
-  String? type;
-  int? difficulty;
-  List? content;
-  List? precautions;
-  // "id": ,
-  // "name": "",
-  // "enName": "",
-  // "type": "",
-  // "difficulty": 1,
-  // "content": [
-  // "",
-  // ],
-  // "Precautions": ["",]
-
-  Exercise(
-      {this.id,
-      this.name,
-      this.enname,
-      this.type,
-      this.difficulty,
-      this.content,
-      this.precautions});
-  Exercise.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        enname = json['enname'],
-        type = json['type'],
-        difficulty = json['difficulty'],
-        content = json['content'],
-        precautions = json['precautions'];
-}
 
 class Dictionary extends StatefulWidget {
   Dictionary({Key? key}) : super(key: key);
@@ -71,7 +36,7 @@ class _DictionaryState extends State<Dictionary> {
     //json파일 읽어오기
     final String response =
         await rootBundle.loadString('testjsonfile/healthmachinedata.json');
-    //print(response.runtimeType);
+    //print(response.runtimeType);w
     Map<String, dynamic> _alldata = await jsonDecode(response);
     setState(() {
       alldata = [..._alldata["items"].map((item) => Exercise.fromJson(item))];
@@ -147,6 +112,7 @@ class _DictionaryState extends State<Dictionary> {
               ),
             ),
           ),
+          //검색창
           SizedBox(
             height: 40,
             child: ListView.builder(
@@ -179,6 +145,7 @@ class _DictionaryState extends State<Dictionary> {
                   );
                 }),
           ),
+          //chips
           Expanded(
             child: Container(
               child: alldata == null || alldata!.isEmpty
@@ -186,6 +153,41 @@ class _DictionaryState extends State<Dictionary> {
                   : ListView.separated(
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.6,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(founddata![index]
+                                              .name
+                                              .toString()),
+                                          Text(founddata![index]
+                                              .enName
+                                              .toString()),
+                                          Column(
+                                              children: founddata![index]
+                                                  .content!
+                                                  .map(
+                                                      (item) => Text('- $item'))
+                                                  .toList()),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                });
+                          },
                           title: Text(founddata![index].name.toString()),
                         );
                       },

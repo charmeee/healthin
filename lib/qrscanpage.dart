@@ -10,7 +10,7 @@ class QrScanPage extends StatefulWidget {
   QrScanPage({Key? key, this.didexercise, required this.addDidexercise})
       : super(key: key);
   final didexercise;
-  final Function() addDidexercise;
+  final Function(String) addDidexercise;
   @override
   State<StatefulWidget> createState() => _QRViewExampleState();
 }
